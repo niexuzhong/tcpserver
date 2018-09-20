@@ -22,7 +22,7 @@
 
 <body>
   <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 navbar-static-top">
-      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Test Server</a>
+      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#" onclick="ChangeServerType();">Test Server</a>
     <!--  <form class="form-inline col-md-6 input-group" >  -->
       <!--  <label class="form-control form-control-dark col-md-2 ">Port Number </label>
         <input type="text" class="form-control form-control-light col-md-2">
@@ -54,27 +54,27 @@
               <li class="nav-item ">
                 <a class="nav-link " id="UDPItemId" href="/UDP">
                 <!--  <span data-feather="file"></span>  -->
-                  <button type="button" class="btn btn-success btn-lg " name="button">UDP </button>
+                  <button type="button" class="btn btn-success btn-lg " id="UDPButtonid" name="button">UDP </button>
 
                 </a>
               </li>
               <li class="nav-item ">
                 <a class="nav-link " href="#">
                 <!--  <span data-feather="shopping-cart"></span>  -->
-                  <button type="button" class="btn btn-success btn-lg disabled" name="button">TCP </button>
+                  <button type="button" class="btn btn-success btn-lg disabled" id="TCPButtonid" name="button">TCP </button>
 
                 </a>
               </li>
               <li class="nav-item ">
                 <a class="nav-link" href="#" >
                 <!--  <span data-feather="users" ></span>  -->
-                  <button type="button" class="btn btn-success btn-lg disabled" name="button">MQTT</button>
+                  <button type="button" class="btn btn-success btn-lg disabled" id="MQTTButonid" name="button">MQTT</button>
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">
                 <!--  <span data-feather="bar-chart-2"></span>  -->
-                  <button type="button" class="btn btn-success btn-lg disabled" name="button">COAP</button>
+                  <button type="button" class="btn btn-success btn-lg disabled" id="CoapButtonid" name="button">COAP</button>
                 </a>
               </li>
             </ul>
@@ -116,6 +116,20 @@
     <script type="text/javascript">
       var connectState=0;
       var packageNumber=0;
+      var curSel=0;
+      function ChangeServerType() {
+        var allString=['UDPButtonid','TCPButtonid','MQTTButonid','CoapButtonid'];
+
+        for(i=0;i<allString.length;i++)
+        {
+          if(i==curSel)
+             document.getElementById(allString[i]).className="btn btn-success btn-lg";
+          else
+            document.getElementById(allString[i]).className +="btn btn-success btn-lg disabled";
+        }
+        curSel++;
+        if(curSel>3)curSel=0;
+      }
       function clickConnect() {
         var disableitem=document.getElementById("UDPItemId");
             disableitem.className+="disabled";
