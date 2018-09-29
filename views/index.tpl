@@ -16,7 +16,11 @@
 
     <!-- Custom styles for this template -->
     <link href="static/css/dashboard.css" rel="stylesheet">
+    <script src="static/js/jquery_3.2.1_jquery.slim.min.js" ></script>
 
+    <script src="static/js/popper.js_1.12.9_umd_popper.min.js"></script>
+    <script src="static/js/bootstrap.min.js"></script>
+    <script src="static/js/websocket.js"></script>
 
 </head>
 
@@ -113,123 +117,8 @@
         </main>
       </div>
     <!-- </div>  -->
-    <script type="text/javascript">
-      var connectState=0;
-      var packageNumber=0;
-      var curSel=0;
-      function ChangeServerType() {
-        var allString=['UDPButtonid','TCPButtonid','MQTTButonid','CoapButtonid'];
-        var nameString=[' UDP',' TCP',' MQTT',' Coap'];
-        curSel++;
-        if(curSel>3)curSel=0;
-        for(i=0;i<allString.length;i++)
-        {
-          if(i==curSel) {
-             document.getElementById(allString[i]).className="label label-success bg-success ";
-             document.getElementById("testServerName").innerHTML="Test "+nameString[curSel]+' Server'
-           }
-          else
-            document.getElementById(allString[i]).className +="label-default bg-light disabled";
-        }
 
-      }
-      function clickConnect() {
-        var disableitem=document.getElementById("UDPItemId");
-            disableitem.className+="disabled";
-        var btnName=document.getElementById("connectBtnId");
-         if (connectState==0) {
-           connectState=1;
-           btnName.innerHTML="Disconnect";
 
-         } else {
-           connectState=0;
-           btnName.innerHTML="connect";
-         }
-      }
-      function addRow(inputdata) {
-        var tab=document.getElementById("datatable");
-        var tr=creatRow(inputdata);
-        tab.appendChild(tr);
-      }
-      function creatRow(inputtxt) {
-        var td,tr;
-        tr=document.createElement("tr");
-        for(var i=0;i<4;i++){
-          td=document.createElement("td");
-
-          td.appendChild(document.createTextNode(inputtxt[i]));
-          tr.appendChild(td);
-        }
-
-        return tr;
-
-      }
-      function clickAddRow() {
-        var indata=new Array(4);
-        indata[0]=packageNumber;
-        indata[1]="192.168.199.240";
-        indata[2]="01 02 03";
-        indata[3]="31 32 33";
-        packageNumber++;
-        addRow(indata);
-      }
-      function CreateSocket() {
-          socket=new WebSocket("ws://127.0.0.1:9001/ws/init");
-          socket.onopen=function(evt) {
-            onOpen(evt);
-          };
-          socket.onmessage=function(evt) {
-            onReceive(evt);
-          };
-          socket.onclose=function(evt) {
-            onClose(evt);
-          };
-        }
-        function sendOpenMethod(){
-          var method=new object();
-          method.name="sendCommand";
-          method.port=9016;
-          method.action="open";
-          method.protocol="UDP";
-          var methodstr=JSON.stringify(method);
-          socket.send(methodstr);
-        }
-        function onOpen(evt){
-           console.log("open data is "+evt.data);
-        }
-        function onReceive(evt) {
-          var a=new Array(4);
-          console.log("data receive is "+evt.data);
-          var msg=JSON.parse(event.data);
-          switch (msg.type){
-            case "packageNumber":
-                   a[0]=msg.packageNumber;
-                   breka;
-            case "address":
-                a[0]=msg.address;
-                break;
-            case "hex":
-                a[1]=msg.hex;
-                break;
-            case "ascii":
-                a[3]=msg.ascii;
-                break;
-          }
-          addRow(a);
-
-        }
-        function onClose(evt) {
-          console.log("close data is "+evt.data);
-        }
-        function clickFileMethod(item) {
-          CreateSocket()
-
-        }
-    </script>
-    <script src="static/js/jquery_3.2.1_jquery.slim.min.js" ></script>
-
-    <script src="static/js/popper.js_1.12.9_umd_popper.min.js"></script>
-    <script src="static/js/bootstrap.min.js"></script>
 
 </body>
 
