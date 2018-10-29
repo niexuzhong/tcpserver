@@ -4,8 +4,8 @@ var connectState=0;
 var packageNumber=0;
 var curSel=0;
 $(document).ready(function () {
-  //  CreateSocket();
-  //  socketCreatedFlag=1;
+    CreateSocket();
+    socketCreatedFlag=1;
 });
 function ChangeServerType() {
   var allString=['UDPButtonid','TCPButtonid','MQTTButonid','CoapButtonid'];
@@ -29,7 +29,6 @@ function clickConnect() {
    if (connectState==0) {
        connectState=1;
        btnName.innerHTML="Disconnect";
-       CreateSocket();
        if(socketCreatedFlag==1){
           sendOpenMethod(curSel);
        }
@@ -84,16 +83,16 @@ function clickAddRow() {
     console.log("data receive is "+evt.data);
     var msg=JSON.parse(event.data);
     switch (msg.type){
-      case "packageNumber":
+      case "PackageNumber":
              a[0]=msg.packageNumber;
              breka;
-      case "address":
+      case "Address":
           a[0]=msg.address;
           break;
-      case "hex":
+      case "HexString":
           a[1]=msg.hex;
           break;
-      case "ascii":
+      case "ASCIIString":
           a[3]=msg.ascii;
           break;
     }

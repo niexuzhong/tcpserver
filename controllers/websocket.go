@@ -7,6 +7,7 @@ import (
 	"tcpserver/models"
 
 	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/logs"
 	"github.com/gorilla/websocket"
 )
 
@@ -34,7 +35,10 @@ func (c *WebsocketController) Initwebsocket() {
 			return
 		}
 		fmt.Println("receive webscoket message is ", string(p))
-
+		var msg models.RecMessage
+		json.Unmarshal(p, &msg)
+		l := logs.GetLogger()
+		l.Println("The recMessage is ", msg.Name)
 	}
 }
 
