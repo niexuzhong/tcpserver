@@ -6,6 +6,7 @@ type DataEvent struct { // structure for data send to web interface
 	Address       string
 	HexString     string
 	ASCIIString   string
+	TimeStamp     string
 }
 
 // RecMessage structure for data received from web
@@ -14,4 +15,5 @@ type RecMessage struct {
 	Port     int
 	Action   string
 	Protocol string
+	Data     string
 }
