@@ -30,9 +30,11 @@ function clickConnect() {
        connectState=1;
        btnName.innerHTML="Disconnect";
        if(socketCreatedFlag==1){
-          sendOpenMethod(curSel);
+          sendOpenMethod(curSel,true);
        }
      } else {
+
+     sendOpenMethod(curSel,false) ;
      connectState=0;
      btnName.innerHTML="connect";
    }
@@ -65,12 +67,16 @@ function clickAddRow() {
   addRow(indata);
 }
 
-  function sendOpenMethod(protocolType){
+  function sendOpenMethod(protocolType,flag){
     var method=new Object();
     var protocolString = new Array('UDP','TCP','MQTT','COAP');
     method.name="sendCommand";
     method.port=9016;
-    method.action="open";
+    if(flag==true){
+      method.action="open";
+    }   else {
+        method.action="close";
+       }
     method.protocol=protocolString[protocolType];
     var methodstr=JSON.stringify(method);
     socket.send(methodstr);
@@ -81,23 +87,12 @@ function clickAddRow() {
   function onReceive(evt) {
     var a=new Array(4);
     console.log("data receive is "+evt.data);
-    var msg=JSON.parse(event.data);
-    switch (msg.type){
-      case "PackageNumber":
-             a[0]=msg.packageNumber;
-             breka;
-      case "Address":
-          a[0]=msg.address;
-          break;
-      case "HexString":
-          a[1]=msg.hex;
-          break;
-      case "ASCIIString":
-          a[3]=msg.ascii;
-          break;
-    }
-    addRow(a);
-
+    var msg=JSON.parse(evt.data);
+     a[0]=msg.TimeStamp;
+     a[1]=msg.Address;
+     a[2]=msg.HexString;
+     a[3]=msg.ASCIIString;
+     addRow(a);
   }
   function onClose(evt) {
     console.log("close data is "+evt.data);
@@ -117,15 +112,4 @@ function CreateSocket() {
   socket.onclose=function(evt) {
     onClose(evt);
   };
-}
-function onOpen(evt) {
-  console.log('open data is '+evt.data);
-}
-function onReceive(evt) {
-  var msg=JSON.parse(evt.data);
-  console.log('timestamp is '+msg.Timestamp+'Hexstring is '+msg.Hexstring+'Asciistring is '+msg.Asciistring);
-
-}
-function onClose(evt) {
-  console.log('close data is '+evt.data);
 }

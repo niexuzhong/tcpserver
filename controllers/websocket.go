@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 	"tcpserver/models"
 
 	"github.com/astaxie/beego"
@@ -39,7 +40,23 @@ func (c *WebsocketController) Initwebsocket() {
 		json.Unmarshal(p, &msg)
 		l := logs.GetLogger()
 		l.Println("The recMessage is ", msg.Name)
+		handlerMessage(msg)
 	}
+}
+
+func handlerMessage(msg models.RecMessage) {
+	switch msg.Protocol {
+	case "TCP":
+		if strings.EqualFold(msg.Action, "Open") {
+			fmt.Println("close tcp server")
+			CreateTCPServer(msg.Port)
+		} else {
+			beego.Info("close server")
+			CloseTCPServer()
+		}
+
+	}
+
 }
 
 func sendWebSocket(data models.DataEvent) {

@@ -102,7 +102,7 @@
             <table class="table table-striped table-sm" id="datatable">
               <thead>
                 <tr>
-                  <th>#</th>
+                  <th>TimeStamp</th>
                   <th>IPAddress</th>
                   <th>Hex</th>
                   <th>ASCII</th>
