@@ -3,6 +3,7 @@ var socketCreatedFlag=0;
 var connectState=0;
 var packageNumber=0;
 var curSel=0;
+var SaveFlag=0;
 $(document).ready(function () {
     CreateSocket();
     socketCreatedFlag=1;
@@ -22,6 +23,13 @@ function ChangeServerType() {
       document.getElementById(allString[i]).className +="label-default bg-light disabled";
   }
 
+}
+function clickSaveBtn() {
+  if (document.getElementById("saveCheckbox").checked==true) {
+    SaveFlag=1;
+  }else {
+    SaveFlag=0;
+  }
 }
 function clickConnect() {
    var btnName=document.getElementById("connectBtnId");
@@ -78,6 +86,7 @@ function clickAddRow() {
         method.action="close";
        }
     method.protocol=protocolString[protocolType];
+    method.saveFlag=SaveFlag
     var methodstr=JSON.stringify(method);
     socket.send(methodstr);
   }

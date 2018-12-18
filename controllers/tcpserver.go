@@ -10,10 +10,15 @@ import (
 	"github.com/astaxie/beego"
 )
 
+//Echoflag echo or not
 var Echoflag int
 var remoteAddr net.Addr
 var server net.Listener
 var conn net.Conn
+var packageNumber int
+
+//SaveFlag save flag
+var SaveFlag bool
 
 //CreateTCPServer create TCP server
 func CreateTCPServer(port int) error {
@@ -51,18 +56,28 @@ func serverTask(listener net.Listener) error {
 		remoteAddr = conn.RemoteAddr()
 		beego.Info("the remote address is", remoteAddr)
 		go handleRequest(conn)
+		if SaveFlag == true {
+			packageNumber = 0
+			go models.CreateDataSaveTask(remoteAddr.String())
+		}
+
 	}
 
 }
 
 func sendtoWebSocket(senddata []byte) {
 	var data models.DataEvent
-
+	data.PackageNumber = packageNumber
 	data.TimeStamp = strconv.FormatInt(time.Now().Unix(), 10)
 	data.ASCIIString = fmt.Sprintf("%s", senddata)
 	data.Address = fmt.Sprintf("%s", remoteAddr)
 	data.HexString = fmt.Sprintf("%x", senddata)
 	sendWebSocket(data)
+	if SaveFlag == true {
+		models.TranSaveChan(data)
+	}
+	packageNumber++
+
 }
 
 func handleRequest(conn net.Conn) {
@@ -81,5 +96,15 @@ func handleRequest(conn net.Conn) {
 		sendtoWebSocket(buffer)
 
 	}
+	if SaveFlag == true {
+		models.EndSaveTask()
+		time.Sleep(time.Duration(400) * time.Millisecond)
+	}
+
 	conn.Close()
+}
+
+//SetSaveFlag set save flag
+func SetSaveFlag(enable bool) {
+	SaveFlag = enable
 }

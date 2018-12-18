@@ -23,6 +23,7 @@ type RecMessage struct {
 	Action   string
 	Protocol string
 	Data     string
+	SaveFlag int
 }
 
 type saveMessage struct {
@@ -80,7 +81,7 @@ func CreateDataSaveTask(filename string) error {
 		beego.Error(err)
 		return err
 	}
-
+	defer stmt.Close()
 	for {
 		select {
 		case data := <-saveData:

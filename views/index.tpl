@@ -34,7 +34,7 @@
       <div class="input-group ">
         <div class="input-group-prepend">
           <div class="input-group-text">Log File
-            <input type="checkbox" aria-label="Checkbox for following text input">
+            <input type="checkbox" onclick="clickSaveBtn();" id="saveCheckbox" aria-label="Checkbox for following text input">
           </div>
         </div>
         <input type="text" class="form-control" aria-label="Text input with checkbox">
