@@ -29,7 +29,7 @@ func CreateTCPServer(port int) error {
 		beego.Error(err.Error())
 		return err
 	}
-	beego.Error("port is", port)
+	beego.Info("port is", port)
 	//defer tcpListener.Close()
 	go serverTask(server)
 
@@ -49,6 +49,7 @@ func serverTask(listener net.Listener) error {
 	for {
 		conn, err = listener.Accept()
 		if err != nil {
+
 			beego.Error("accept tcp server error")
 			beego.Error(err.Error())
 			return err
@@ -57,7 +58,9 @@ func serverTask(listener net.Listener) error {
 		beego.Info("the remote address is", remoteAddr)
 		go handleRequest(conn)
 		if SaveFlag == true {
+			beego.Info("create save data task ")
 			packageNumber = 0
+			models.InitSaveChan()
 			go models.CreateDataSaveTask(remoteAddr.String())
 		}
 
@@ -74,6 +77,7 @@ func sendtoWebSocket(senddata []byte) {
 	data.HexString = fmt.Sprintf("%x", senddata)
 	sendWebSocket(data)
 	if SaveFlag == true {
+		beego.Info("transimit save data")
 		models.TranSaveChan(data)
 	}
 	packageNumber++

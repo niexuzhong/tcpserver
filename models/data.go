@@ -45,11 +45,13 @@ func InitSaveChan() {
 // TranSaveChan  save data to channel variable
 func TranSaveChan(data DataEvent) {
 	var msg saveMessage
+	beego.Info("before ms to saveData")
 	msg.PackageNumber = data.PackageNumber
 	msg.TimeStamp = data.TimeStamp
 	msg.ASCIIString = data.ASCIIString
 	msg.HexString = data.HexString
 	saveData <- msg
+	beego.Info("msg to savedata once")
 }
 
 //EndSaveTask  set channel to end save task
@@ -61,11 +63,12 @@ func EndSaveTask() {
 //CreateDataSaveTask create saving data task
 func CreateDataSaveTask(filename string) error {
 
-	db, err := sql.Open("sqlite3", filename)
+	db, err := sql.Open("sqlite3", filename+".db")
 	if err != nil {
 		beego.Error(err)
 		return err
 	}
+	beego.Info("open data file ok")
 	defer db.Close()
 	sqlExec := `create table DATA (packageNumber integer not null primary key,TimeStamp text
 		 ,ASCIIString text,HexString text)`
@@ -74,7 +77,7 @@ func CreateDataSaveTask(filename string) error {
 		beego.Error(err)
 		return err
 	}
-
+	beego.Info("create table ok")
 	stmt, err := db.Prepare(`insert into data(packageNumber,TimeStamp,ASCIIString,HexString)
 	               values(?,?,?,?)`)
 	if err != nil {
@@ -90,6 +93,7 @@ func CreateDataSaveTask(filename string) error {
 				beego.Error(err)
 				return err
 			}
+			beego.Info("record once")
 
 		case <-endFlag:
 			return nil

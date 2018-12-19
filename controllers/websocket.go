@@ -12,12 +12,14 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+//WebsocketController websocket
 type WebsocketController struct {
 	beego.Controller
 }
 
 var ws *websocket.Conn
 
+//Initwebsocket initialize web socket
 func (c *WebsocketController) Initwebsocket() {
 	fmt.Println("websocket initial")
 	var err error
@@ -55,6 +57,11 @@ func handlerMessage(msg models.RecMessage) {
 			CloseTCPServer()
 		}
 
+	}
+	if msg.SaveFlag == 1 {
+		SaveFlag = true
+	} else {
+		SaveFlag = false
 	}
 
 }
