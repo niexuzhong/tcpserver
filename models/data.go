@@ -2,9 +2,8 @@ package models
 
 import (
 	"database/sql"
-
-	"github.com/astaxie/beego"
 	_ "github.com/mattn/go-sqlite3"
+	"log"
 )
 
 // DataEvent structure for data send to web interface
@@ -45,13 +44,13 @@ func InitSaveChan() {
 // TranSaveChan  save data to channel variable
 func TranSaveChan(data DataEvent) {
 	var msg saveMessage
-	beego.Info("before ms to saveData")
+	log.Println("before ms to saveData")
 	msg.PackageNumber = data.PackageNumber
 	msg.TimeStamp = data.TimeStamp
 	msg.ASCIIString = data.ASCIIString
 	msg.HexString = data.HexString
 	saveData <- msg
-	beego.Info("msg to savedata once")
+	log.Println("msg to savedata once")
 }
 
 //EndSaveTask  set channel to end save task
@@ -65,23 +64,23 @@ func CreateDataSaveTask(filename string) error {
 
 	db, err := sql.Open("sqlite3", filename+".db")
 	if err != nil {
-		beego.Error(err)
+		log.Println(err)
 		return err
 	}
-	beego.Info("open data file ok")
+	log.Println("open data file ok")
 	defer db.Close()
 	sqlExec := `create table DATA (packageNumber integer not null primary key,TimeStamp text
 		 ,ASCIIString text,HexString text)`
 	_, err = db.Exec(sqlExec)
 	if err != nil {
-		beego.Error(err)
+		log.Println(err)
 		return err
 	}
-	beego.Info("create table ok")
+	log.Println("create table ok")
 	stmt, err := db.Prepare(`insert into data(packageNumber,TimeStamp,ASCIIString,HexString)
 	               values(?,?,?,?)`)
 	if err != nil {
-		beego.Error(err)
+		log.Println(err)
 		return err
 	}
 	defer stmt.Close()
@@ -90,10 +89,10 @@ func CreateDataSaveTask(filename string) error {
 		case data := <-saveData:
 			_, err = stmt.Exec(data.PackageNumber, data.TimeStamp, data.ASCIIString, data.HexString)
 			if err != nil {
-				beego.Error(err)
+				log.Println(err)
 				return err
 			}
-			beego.Info("record once")
+			log.Println("record once")
 
 		case <-endFlag:
 			return nil
