@@ -48,23 +48,9 @@ function clickConnect() {
    }
  }
 function addRow(inputdata) {
-  var tab=document.getElementById("datatable");
-  var tr=creatRow(inputdata);
-  tab.appendChild(tr);
+ createRow(inputdata)
 }
-function creatRow(inputtxt) {
-  var td,tr;
-  tr=document.createElement("tr");
-  for(var i=0;i<4;i++){
-    td=document.createElement("td");
 
-    td.appendChild(document.createTextNode(inputtxt[i]));
-    tr.appendChild(td);
-  }
-
-  return tr;
-
-}
 function clickAddRow() {
   var indata=new Array(4);
   indata[0]=packageNumber;
