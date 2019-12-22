@@ -117,7 +117,7 @@ func handleRequest(conn net.Conn) {
 		}
 		buffer = buffer[:reqLen]
 		hexstring := fmt.Sprintf("%02x ", buffer)
-		log.Println("s%", hexstring)
+		log.Println("hexString is ", hexstring)
 		sendtoWebSocket(buffer)
 
 	}
