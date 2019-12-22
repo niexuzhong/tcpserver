@@ -85,8 +85,11 @@ func serverTask(listener net.Listener) error {
 
 func sendtoWebSocket(senddata []byte) {
 	var data models.DataEvent
+	timeTemplate1 := "2006-01-02 15:04:05"
 	data.PackageNumber = packageNumber
-	data.TimeStamp = strconv.FormatInt(time.Now().Unix(), 10)
+	t := (int64)(time.Now().Unix())
+	data.TimeStamp = time.Unix(t, 0).Format(timeTemplate1)
+	//data.TimeStamp = strconv.FormatInt(time.Now().Unix(), 10)
 	data.ASCIIString = fmt.Sprintf("%s", senddata)
 	data.Address = fmt.Sprintf("%s", remoteAddr)
 	data.HexString = fmt.Sprintf("%x", senddata)

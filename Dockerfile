@@ -5,4 +5,4 @@ COPY . $GOPATH/src/tcpserver
 RUN go build .
 
 EXPOSE 9001
-ENTRYPOINT ["./main"]
+ENTRYPOINT ["./tcpserver"]
