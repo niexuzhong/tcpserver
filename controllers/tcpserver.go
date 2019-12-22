@@ -2,13 +2,14 @@ package controllers
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"log"
 	"net"
 	"net/http"
 	"strconv"
 	"tcpserver/models"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 //Echoflag echo or not
@@ -21,6 +22,7 @@ var packageNumber int
 //SaveFlag save flag
 var SaveFlag bool
 
+//IndexHandler handler the index.html
 func IndexHandler(c *gin.Context) {
 	c.HTML(http.StatusOK, "index.tpl", gin.H{
 		"displayType": "TCP",
@@ -98,18 +100,21 @@ func sendtoWebSocket(senddata []byte) {
 }
 
 func handleRequest(conn net.Conn) {
-	buffer := make([]byte, 1024)
+
 	for {
+		buffer := make([]byte, 1024)
 		reqLen, err := conn.Read(buffer)
 		if err != nil {
-			log.Println("read buffer error")
+			log.Println("error is ", err.Error())
 			break
 		}
-		log.Println("reqLen is", reqLen)
+		log.Println("recLen is", reqLen)
 		if Echoflag != 0 {
 			conn.Write(buffer[reqLen:])
 		}
 		buffer = buffer[:reqLen]
+		hexstring := fmt.Sprintf("%02x ", buffer)
+		log.Println("s%", hexstring)
 		sendtoWebSocket(buffer)
 
 	}
