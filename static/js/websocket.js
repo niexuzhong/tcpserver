@@ -4,10 +4,20 @@ var connectState=0;
 var packageNumber=0;
 var curSel=0;
 var SaveFlag=0;
+
+var url = window.location.href;
+
+
 $(document).ready(function () {
     CreateSocket();
     socketCreatedFlag=1;
 });
+
+function GetUrl( herf){
+    var index= herf.indexOf("/",7);
+    var herf=herf.slice(7,index);
+    return herf;
+}
 function ChangeServerType() {
   var allString=['UDPButtonid','TCPButtonid','MQTTButonid','CoapButtonid'];
   var nameString=[' UDP',' TCP',' MQTT',' Coap'];
@@ -97,7 +107,10 @@ function clickAddRow() {
 
   }
 function CreateSocket() {
-  socket=new WebSocket("ws://127.0.0.1:9001/ws/init");
+  url=GetUrl(url);
+  url="ws://"+url+"/ws/init"
+  console.log("url is ",url);
+  socket=new WebSocket(url);
   console.log("create websocket");
   socket.onopen=function(evt) {
     onOpen(evt);
