@@ -3,14 +3,16 @@ package controllers
 import (
 	"encoding/json"
 
-	"github.com/gin-gonic/gin"
-	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
 	"strings"
 	"tcpserver/models"
+
+	"github.com/gin-gonic/gin"
+	"github.com/gorilla/websocket"
 )
 
+var webscoketOnline = false
 var ws *websocket.Conn
 var upGrader = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool {
@@ -18,15 +20,21 @@ var upGrader = websocket.Upgrader{
 	},
 }
 
+func getWebsocketStatus() bool {
+	return webscoketOnline
+}
+
 //Initwebsocket initialize web socket
 func Initwebsocket(c *gin.Context) {
 	log.Println("websocket initial")
 	var err error
+	webscoketOnline = false
 	ws, err = upGrader.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
 		log.Println("Can not setup websocket connection", err)
 		return
 	}
+	webscoketOnline = true
 	/*if _, ok := err.(websocket.HandshakeError); ok {
 		http.Error(c.Ctx.ResponseWriter, "Not a websocket handshake", 400)
 		return
@@ -62,9 +70,9 @@ func handlerMessage(msg models.RecMessage) {
 
 	}
 	if msg.SaveFlag == 1 {
-		SaveFlag = true
+		SetSaveFlag(true)
 	} else {
-		SaveFlag = false
+		SetSaveFlag(false)
 	}
 
 }

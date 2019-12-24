@@ -18,6 +18,7 @@ var remoteAddr net.Addr
 var server net.Listener
 var conn net.Conn
 var packageNumber int
+var socketOpenFlag = false
 
 //SaveFlag save flag
 var SaveFlag bool
@@ -32,12 +33,16 @@ func IndexHandler(c *gin.Context) {
 //CreateTCPServer create TCP server
 func CreateTCPServer(port int) error {
 	var err error
+	if socketOpenFlag == true {
+		return nil
+	}
 	server, err = net.Listen("tcp", ":"+strconv.Itoa(port))
 	if err != nil {
 		log.Println("create tcp server error")
 		log.Println(err.Error())
 		return err
 	}
+	socketOpenFlag = true
 	log.Println("port is", strconv.Itoa(port))
 	log.Println("begin to listen")
 	//defer tcpListener.Close()
@@ -48,6 +53,7 @@ func CreateTCPServer(port int) error {
 
 //CloseTCPServer close tcp server
 func CloseTCPServer() {
+	socketOpenFlag = false
 	fmt.Println("close tcp server")
 	if conn != nil {
 		conn.Close()
@@ -118,7 +124,9 @@ func handleRequest(conn net.Conn) {
 		buffer = buffer[:reqLen]
 		hexstring := fmt.Sprintf("%02x ", buffer)
 		log.Println("hexString is ", hexstring)
-		sendtoWebSocket(buffer)
+		if getWebsocketStatus() == true {
+			sendtoWebSocket(buffer)
+		}
 
 	}
 	if SaveFlag == true {
