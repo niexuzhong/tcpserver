@@ -6,8 +6,50 @@ var curSel=0;
 var SaveFlag=0;
 
 var url = window.location.href;
-
-
+url=GetUrl(url);
+function clickUpLoad(e) {
+  var fileInfo = e.files[0];
+  var fileName = fileInfo.name;
+  var filesize = fileInfo.size;
+  console.log("name is "+fileName+"size is "+filesize);
+  var fileReader = new FileReader();
+  fileReader.readAsArrayBuffer(fileInfo);
+  fileReader.onload = function (result){
+    var pakoString = getUploadingFileContentString(this.result);
+    var urlstring = "http://"+url+"/upload";
+    console.log("ajax url is "+urlstring);
+    $.ajax({
+      url:urlstring,
+      type:"POST",
+      data:{
+        fileContent:pakoString,
+        fileName:fileName,
+      },
+      success:function(data) {
+        if (data=="True") {
+          alert("upload successful");
+        } else {
+          alert("upload failure");
+        }
+      },
+      error: function(e){
+        alert(e.responseText);
+      }
+    })
+  }
+}
+function getUploadingFileContentString(readResult) {
+  if(readResult == null ){
+    return null
+  }
+  var fileContentArr = new Uint8Array(readResult);
+  var fileContentStr = "";
+  for (var i=0;i<fileContentArr.length;i++){
+    fileContentStr+=String.fromCharCode(fileContentArr[i]);
+  }
+//  var pakoString=fromByteArray(fileContentStr);
+  return fileContentStr;
+}
 $(document).ready(function () {
     CreateSocket();
     socketCreatedFlag=1;
@@ -16,6 +58,7 @@ $(document).ready(function () {
 function GetUrl( herf){
     var index= herf.indexOf("/",7);
     var herf=herf.slice(7,index);
+    console.log("herf is",herf);
     return herf;
 }
 function ChangeServerType() {
@@ -107,10 +150,10 @@ function clickAddRow() {
 
   }
 function CreateSocket() {
-  url=GetUrl(url);
-  url="ws://"+url+"/ws/init"
-  console.log("url is ",url);
-  socket=new WebSocket(url);
+
+  wsurl="ws://"+url+"/ws/init"
+  console.log("url is ",wsurl);
+  socket=new WebSocket(wsurl);
   console.log("create websocket");
   socket.onopen=function(evt) {
     onOpen(evt);

@@ -11,15 +11,15 @@
 
     <title>Test Server</title>
     <link href="static/css/tabulator.min.css" rel="stylesheet">
-     <script type="text/javascript" src="static/js/tabulator.js"></script> 
+     <script type="text/javascript" src="static/js/tabulator.js"></script>
     <script type="text/javascript" src="static/js/jquery-3.2.1.min.js"></script>
-    <script type="text/javascript" src="static/js/jquery-ui.min.js"></script>    
+    <script type="text/javascript" src="static/js/jquery-ui.min.js"></script>
     <!-- Bootstrap core CSS -->
     <link href="static/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
     <link href="static/css/dashboard.css" rel="stylesheet">
-    <script src="static/js/jquery_3.2.1_jquery.slim.min.js" ></script>
+    <script src="static/js/jquery-3.2.1.min.js" ></script>
 
     <script src="static/js/popper.js_1.12.9_umd_popper.min.js"></script>
     <script src="static/js/bootstrap.min.js"></script>
@@ -49,6 +49,9 @@
         </li>
       </ul>  -->
       <span class="col-md-6"> </span>
+      <div class="btn btn-sm btn-outline-secondary p-3">
+          <input type="file" id="upload" onchange="clickUpLoad(this);">
+      </div>
        <button class="btn btn-sm btn-outline-secondary p-3 " onclick="clickConnect();" id="connectBtnId">Connect</button>
     </nav>
 
@@ -108,7 +111,7 @@
       </div>
     <!-- </div>  -->
 
-    <script type="text/javascript" src="static/js/open.js"></script>    
+    <script type="text/javascript" src="static/js/open.js"></script>
 
 </body>
 
