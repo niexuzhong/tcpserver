@@ -22,6 +22,7 @@ require (
 	github.com/securego/gosec v0.0.0-20191219224501-5d613739e150 // indirect
 	github.com/shiena/ansicolor v0.0.0-20151119151921-a422bbe96644 // indirect
 	github.com/smartystreets/goconvey v1.6.4
+	github.com/stretchr/testify v1.4.0
 	github.com/stripe/safesql v0.2.0 // indirect
 	github.com/tsenart/deadcode v0.0.0-20160724212837-210d2dc333e9 // indirect
 	github.com/walle/lll v1.0.1 // indirect

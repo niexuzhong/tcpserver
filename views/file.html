@@ -10,7 +10,9 @@
 <body>
 
     {{range $i, $v := .filenames}}
-        <a href="$v" download>$v</a>
+        {{ with  $v }}
+        <a href="{{.fileName}}" download>{{.modTime}}</a>
+        {{ end }}
     {{end}}
 
 </body>

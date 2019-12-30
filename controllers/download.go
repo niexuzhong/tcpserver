@@ -18,8 +18,14 @@ type FileProperty struct {
 	modTime  string
 }
 func FileDownHandler(c *gin.Context){
-	filenames :=getDirFileList("datafile",false)
-	
+	filenames :=getDirFileList("../datafile",false)
+	/*fn:=make([]string,len(filenames))
+	location:=0
+	for _,f :=range filenames {
+		fn[location]=f.fileName
+		location++
+	}*/
+	log.Println("file name len is ", len(filenames))
 	c.HTML(http.StatusOK, "file.html", gin.H{
 		"filenames": filenames,
 	})   	
