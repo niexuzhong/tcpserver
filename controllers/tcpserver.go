@@ -13,7 +13,7 @@ import (
 )
 
 //Echoflag echo or not
-var Echoflag int
+var EchoFlag bool
 var remoteAddr net.Addr
 var server net.Listener
 var conn net.Conn
@@ -25,7 +25,7 @@ var SaveFlag bool
 
 //IndexHandler handler the index.html
 func IndexHandler(c *gin.Context) {
-	c.HTML(http.StatusOK, "index.tpl", gin.H{
+	c.HTML(http.StatusOK, "index.html", gin.H{
 		"displayType": "TCP",
 	})
 }
@@ -43,8 +43,8 @@ func CreateTCPServer(port int) error {
 		return err
 	}
 	socketOpenFlag = true
-	log.Println("port is", strconv.Itoa(port))
-	log.Println("begin to listen")
+	//log.Println("port is", strconv.Itoa(port))
+	//log.Println("begin to listen")
 	//defer tcpListener.Close()
 	go serverTask(server)
 
@@ -82,7 +82,7 @@ func serverTask(listener net.Listener) error {
 			log.Println("create save data task ")
 			packageNumber = 0
 			models.InitSaveChan()
-			go models.CreateDataSaveTask(remoteAddr.String())
+			go models.CreateDataSaveTask("../datafile/"+remoteAddr.String())
 		}
 
 	}
@@ -118,10 +118,11 @@ func handleRequest(conn net.Conn) {
 			break
 		}
 		log.Println("recLen is", reqLen)
-		if Echoflag != 0 {
-			conn.Write(buffer[reqLen:])
-		}
+
 		buffer = buffer[:reqLen]
+		if EchoFlag != false {
+			conn.Write(buffer)
+		}
 		hexstring := fmt.Sprintf("%02x ", buffer)
 		log.Println("hexString is ", hexstring)
 		if getWebsocketStatus() == true {
@@ -140,4 +141,8 @@ func handleRequest(conn net.Conn) {
 //SetSaveFlag set save flag
 func SetSaveFlag(enable bool) {
 	SaveFlag = enable
+}
+
+func SetEchoFlag(enable bool) {
+	EchoFlag = enable
 }

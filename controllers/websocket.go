@@ -28,7 +28,9 @@ func getWebsocketStatus() bool {
 func Initwebsocket(c *gin.Context) {
 	log.Println("websocket initial")
 	var err error
-	webscoketOnline = false
+	if webscoketOnline == true {
+		return
+	}
 	ws, err = upGrader.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
 		log.Println("Can not setup websocket connection", err)
@@ -73,6 +75,11 @@ func handlerMessage(msg models.RecMessage) {
 		SetSaveFlag(true)
 	} else {
 		SetSaveFlag(false)
+	}
+	if msg.EchoFlag == 1 {
+        SetEchoFlag(true)
+	} else {
+		SetEchoFlag(false)
 	}
 
 }

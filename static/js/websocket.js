@@ -4,7 +4,7 @@ var connectState=0;
 var packageNumber=0;
 var curSel=0;
 var SaveFlag=0;
-
+var EchoFlag=0;
 var url = window.location.href;
 url=GetUrl(url);
 function clickUpLoad(e) {
@@ -42,7 +42,7 @@ function getUploadingFileContentString(readResult) {
   if(readResult == null ){
     return null
   }
-  var fileContentArr = new Uint8Array(readResult);
+    var fileContentArr = new Uint8Array(readResult);
   var fileContentStr = "";
   for (var i=0;i<fileContentArr.length;i++){
     fileContentStr+=String.fromCharCode(fileContentArr[i]);
@@ -57,8 +57,8 @@ $(document).ready(function () {
 
 function GetUrl( herf){
     var index= herf.indexOf("/",7);
-    var herf=herf.slice(7,index);
-    console.log("herf is",herf);
+     herf=herf.slice(7,index);
+    console.log("url is",herf);
     return herf;
 }
 function ChangeServerType() {
@@ -77,6 +77,15 @@ function ChangeServerType() {
   }
 
 }
+
+function clickEchoBtn() {
+    if (document.getElementById("echoCheckbox").checked==true) {
+        EchoFlag=1;
+    }else {
+        EchoFlag=0;
+    }
+}
+
 function clickSaveBtn() {
   if (document.getElementById("saveCheckbox").checked==true) {
     SaveFlag=1;
@@ -100,8 +109,8 @@ function clickConnect() {
      btnName.innerHTML="connect";
    }
  }
-function addRow(inputdata) {
- createRow(inputdata)
+function addRow(input_data) {
+ createRow(input_data)
 }
 
 function clickAddRow() {
@@ -126,6 +135,7 @@ function clickAddRow() {
        }
     method.protocol=protocolString[protocolType];
     method.saveFlag=SaveFlag
+    method.echoFlag=EchoFlag
     var methodstr=JSON.stringify(method);
     socket.send(methodstr);
   }

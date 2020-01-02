@@ -19,6 +19,9 @@ func main() {
 	router.LoadHTMLGlob("views/*")
 	router.GET("/index.html", controllers.IndexHandler)
 	router.GET("/ws/init", controllers.Initwebsocket)
+	router.GET("/list",controllers.ListFileHandler)
+	router.GET("download/*id",controllers.DownloadFileHandler)
+	controllers.SetFilePath("datafile")
 	//v := router.Group("/")
 	//v.GET("/index.html", controllers.IndexHandler)
 	srv := &http.Server{

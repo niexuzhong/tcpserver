@@ -23,6 +23,7 @@ type RecMessage struct {
 	Protocol string
 	Data     string
 	SaveFlag int
+	EchoFlag int
 }
 
 type saveMessage struct {

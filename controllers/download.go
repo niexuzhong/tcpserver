@@ -1,5 +1,6 @@
 package controllers
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"log"
@@ -13,22 +14,40 @@ type FileItem struct {
 }
 
 type FileProperty struct {
-	fileName string
-
-	modTime  string
+	FileName string
+	FilePath string
+	ModTime  string
 }
-func FileDownHandler(c *gin.Context){
-	filenames :=getDirFileList("../datafile",false)
-	/*fn:=make([]string,len(filenames))
-	location:=0
-	for _,f :=range filenames {
-		fn[location]=f.fileName
-		location++
-	}*/
-	log.Println("file name len is ", len(filenames))
+var filePath string
+
+func SetFilePath (filepath string) {
+	filePath=filepath
+}
+
+func ListFileHandler(c *gin.Context){
+
+	filenames :=getDirFileList(filePath,false)
+
 	c.HTML(http.StatusOK, "file.html", gin.H{
 		"filenames": filenames,
-	})   	
+	})
+}
+
+func DownloadFileHandler(c *gin.Context)  {
+
+	filename:=c.Param("id")
+	len:=len(filename)
+	filename=filename[1:len]
+	log.Println("filename is ",filename)
+	c.Writer.Header().Add("Content-Disposition", fmt.Sprintf("attachment; filename=%s", filename))//fmt.Sprintf("attachment; filename=%s", filename)对下载的文件重命名
+	c.Writer.Header().Add("Content-Type", "application/octet-stream")
+	c.File(filename)
+
+	//filenames :=getDirFileList(filePath,false)
+
+	//c.HTML(http.StatusOK, "file.html", gin.H{
+	//	"filenames": filenames,
+	//})
 }
 
 
@@ -38,25 +57,27 @@ func getDirFileList(dirname string, dirflag bool)  []FileProperty {
 	filepropertylist := make([]FileProperty,1024)
 	if err!=nil {
 		log.Println("Read file error is ",err.Error())
-		return nil 
+		return nil
 	}
 	location:=0
 	for _,f:=range files {
 		if (dirflag == true) && (f.IsDir()==true) {
-			filepropertylist[location].fileName=f.Name()
-			filepropertylist[location].modTime=f.ModTime().String()
+			filepropertylist[location].FileName=f.Name()
+			filepropertylist[location].FilePath= "download/"+dirname+"/"+f.Name()
+			filepropertylist[location].ModTime=f.ModTime().String()
 			location++
 		} else if (dirflag == false) && (f.IsDir() == false) {
-			filepropertylist[location].fileName=f.Name()
-			filepropertylist[location].modTime=f.ModTime().String()
-			location++			
+			filepropertylist[location].FileName=f.Name()
+			filepropertylist[location].FilePath= "download/"+dirname+"/"+f.Name()
+			filepropertylist[location].ModTime=f.ModTime().String()
+			location++
 		} else {
 			continue
 		}
 	}
 	filepropertylist=filepropertylist[:location]
-	
 
-	
+
+
 	return filepropertylist
 }
