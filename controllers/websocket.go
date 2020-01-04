@@ -85,9 +85,12 @@ func handlerMessage(msg models.RecMessage) {
 }
 
 func sendWebSocket(data models.DataEvent) {
-	senddata, err := json.Marshal(data)
-	if err != nil {
-		log.Println("Fail to marshal data", err)
+	if webscoketOnline == true {
+		senddata, err := json.Marshal(data)
+		if err != nil {
+			log.Println("Fail to marshal data", err)
+		}
+		ws.WriteMessage(websocket.TextMessage, senddata)
 	}
-	ws.WriteMessage(websocket.TextMessage, senddata)
+
 }
