@@ -62,10 +62,12 @@ function GetUrl( herf){
     return herf;
 }
 function ChangeServerType() {
-  var allString=['UDPButtonid','TCPButtonid','MQTTButonid','CoapButtonid'];
-  var nameString=[' UDP',' TCP',' MQTT',' Coap'];
+  let allString=['UDPButtonid','TCPButtonid']; //,'MQTTButonid','CoapButtonid'];
+  let nameString=[' UDP',' TCP'];  //MQTT',' Coap'];
   curSel++;
-  if(curSel>3)curSel=0;
+  //if(curSel>3)curSel=0;
+  curSel=curSel%allString.length;
+  console.log('cursel is ',curSel)
   for(i=0;i<allString.length;i++)
   {
     if(i==curSel) {
