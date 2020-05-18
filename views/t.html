@@ -2,9 +2,28 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Document</title>
 </head>
 <body>
-
+    <div>
+        <input type="file" id="files" style="display: none" onchange="fileImport();">
+        <input type="button" id="fileImport" value="import">
+    </div>
+    <script src="../static/js/jquery-3.2.1.min.js"> </script>
+   <script>
+       $("#fileImport").click(function() {
+              $("#files").click();
+       });
+       function  fileImport() {
+           let selectedFile=document.getElementById('files').files[0];
+           let name = selectedFile.name;
+           let size= selectedFile.size;
+           console.log("filename "+name+" size "+size);
+           let  reader=new FileReader();
+           reader.onload=function() {
+               console.log(this.result);
+           }
+       }
+   </script>
 </body>
 </html>
